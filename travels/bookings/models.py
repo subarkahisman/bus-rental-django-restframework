@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import User
 
 # Create your models here.
 class Bus(models.Model):
@@ -22,5 +23,8 @@ class Seat(models.Model):
 
     def __str__(self):
         return f"{self.bus} {self.seat_number}"
+    
+class Booking(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
 
     

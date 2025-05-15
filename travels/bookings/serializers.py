@@ -26,3 +26,12 @@ class SeatSerializer(serializers.ModelSerializer):
     class Meta:
         model = Seat
         fields = ['id', 'seat_number', 'is_booked']
+
+
+class BookingSerializer(serializers.ModelSerializer ):
+    bus = serializers.StringRelatedField()
+    seat = SeatSerializer
+    user = serializers.StringRelatedField()
+
+    class Meta:
+        model = 

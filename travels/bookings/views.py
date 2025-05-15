@@ -5,7 +5,7 @@ from rest_framework import status, generics
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from .models import Bus
-from .serializers import UserRegisterSerializer
+from .serializers import UserRegisterSerializer, BusSerializer
 
 
 class RegisterView(APIView):
@@ -38,4 +38,11 @@ class LoginView(APIView):
 
 class BusListCreateView(generics.ListCreateAPIView):
     queryset = Bus.objects.all()
+    serializer_class = BusSerializer
+
+class BusDetailView(generics.RetrieveDestroyAPIView):
+    queryset = Bus.objects.all()
+    serializer_class = BusSerializer
+
+
     

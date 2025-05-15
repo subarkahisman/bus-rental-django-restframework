@@ -4,8 +4,8 @@ from rest_framework.authtoken.models import Token
 from rest_framework import status, generics
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from .models import Bus
-from .serializers import UserRegisterSerializer, BusSerializer
+from .models import Bus, Seat, Booking
+from .serializers import UserRegisterSerializer, BusSerializer, BookingSerializer
 
 
 class RegisterView(APIView):
@@ -45,4 +45,33 @@ class BusDetailView(generics.RetrieveDestroyAPIView):
     serializer_class = BusSerializer
 
 
-    
+class BookingView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        seat_id = request.data.get('seat')
+        try:
+            seat = Seat.objects.get(id = seat_id)
+            if seat.is_booked:
+                return Response({'error': 'Seat already booked'}, status=status.HTTP_400_BAD_REQUEST)
+            
+            seat.is_booked = True
+            seat.save()
+
+            bookings = Booking.objects.create(
+                user = request.user,
+                bus = set.bus,
+                seat = seat
+            )
+            serializer = BookingSerializer(bookings)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        except seat.DoesNotExist:
+            return Response({'error':'Invalid seat ID'}, status=status.HTTP_400_BAD_REQUEST)
+
+class UserBookingView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(sel, request, user_id):
+        if request.user.id != user_id :
+            PermissionError
+            
